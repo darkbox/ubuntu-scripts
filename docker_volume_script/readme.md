@@ -1,6 +1,16 @@
 # Script respaldo volumenes Docker
 > Tener en cuenta, que esto solo se encarga de los volumenes de Docker. No respalda variables de entorno (.env), *bindings*, archivos de *stack.yml* u otras configuraciones relacionadas con Docker.
 
+Descargar directamente con `wget` o `curl`:
+```bash
+wget https://raw.githubusercontent.com/darkbox/ubuntu-scripts/main/docker_volume_script/backup_docker_volume.sh
+```
+
+```bash
+curl -O https://raw.githubusercontent.com/darkbox/ubuntu-scripts/main/docker_volume_script/backup_docker_volume.sh
+```
+
+
 ## Uso
 Ejecutar el script `docker-volumes-backup.sh`. No es necesario indicar el directorio de destino, por defecto lo guarda en `/backup/docker-volumes`.
 
