@@ -14,6 +14,10 @@ apt update && apt upgrade -y
 echo "Instalando paquetes micro y tree..."
 apt install -y micro tree
 
+# Instalar editor Fresh
+echo "Instalando editor Fresh"
+curl https://raw.githubusercontent.com/sinelaw/fresh/refs/heads/master/scripts/install.sh | sh
+
 # Descargar e instalar Docker
 echo "Descargando script oficial de instalación de Docker..."
 curl -fsSL https://get.docker.com -o get-docker.sh
