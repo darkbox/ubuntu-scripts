@@ -11,8 +11,8 @@ echo "Actualizando repositorios y sistema..."
 apt update && apt upgrade -y
 
 # Instalar paquetes básicos
-echo "Instalando paquetes micro y tree..."
-apt install -y micro tree
+echo "Instalando paquetes..."
+apt install -y micro tree btop
 
 # Instalar editor Fresh
 echo "Instalando editor Fresh"
