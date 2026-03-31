@@ -16,12 +16,12 @@ Este script automatiza la configuración básica de un servidor Ubuntu con:
 
 ### Usando `curl` 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/darkbox/ubuntu-scripts/main/basic-server-docker-setup.sh)
+curl -fsSL https://raw.githubusercontent.com/darkbox/ubuntu-scripts/main/basic-server-docker-setup.sh | sudo bash
 ```
 
 ### Usando `wget`
 ```bash
-bash <(wget -qO- https://raw.githubusercontent.com/darkbox/ubuntu-scripts/main/basic-server-docker-setup.sh)
+wget -qO- https://raw.githubusercontent.com/darkbox/ubuntu-scripts/main/basic-server-docker-setup.sh | sudo bash
 ```
 
 
