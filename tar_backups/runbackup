@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Grandparent-Parent-Child (GPC) rotation backup script.
 
-BACKUP_FILES=(/home/dexter/Documents/work/geoinnova/basalan/ingunet-basoinsa-basalan/client-server/storage/app /home/dexter/Documents/work/geoinnova/basalan/ingunet-basoinsa-basalan/client-server/storage/logs)
+BACKUP_FILES=(/home /opt/docker)
 BACKUP_DEST="/mnt/backup"
 HOSTNAME=$(hostname -s)
 DAY=$(date +%A)
