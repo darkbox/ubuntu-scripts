@@ -1,0 +1,83 @@
+#!/bin/bash
+set -euo pipefail
+
+# Grandparent-Parent-Child (GPC) rotation backup script.
+
+BACKUP_FILES=(/home/dexter/Documents/work/geoinnova/basalan/ingunet-basoinsa-basalan/client-server/storage/app /home/dexter/Documents/work/geoinnova/basalan/ingunet-basoinsa-basalan/client-server/storage/logs)
+BACKUP_DEST="/mnt/backup"
+HOSTNAME=$(hostname -s)
+DAY=$(date +%A)
+DAY_NUM=$(date +%-d)
+MONTH_NUM=$(date +%-m)
+LOG_FILE="/var/log/backup.log"
+MIN_DISK_MB=1000
+
+log() {
+    echo "[$(date +"%Y-%m-%d %H:%M:%S")] $1" | tee -a "$LOG_FILE"
+}
+
+alert_fail() {
+    local msg="BACKUP FAILED on $HOSTNAME at $(date). Reason: $1"
+    log "ALERT: $msg"
+    exit 1
+}
+
+mkdir -p "$BACKUP_DEST"
+
+AVAIL_MB=$(df -Pm "$BACKUP_DEST" | awk 'NR==2 {print $4}')
+log "Available disk space: ${AVAIL_MB}MB"
+
+if (( AVAIL_MB < MIN_DISK_MB )); then
+    alert_fail "Low disk space: only ${AVAIL_MB}MB available on $BACKUP_DEST"
+fi
+
+if (( DAY_NUM <= 7 )); then
+    WEEK_FILE="$HOSTNAME-week1.tgz"
+elif (( DAY_NUM <= 14 )); then
+    WEEK_FILE="$HOSTNAME-week2.tgz"
+elif (( DAY_NUM <= 21 )); then
+    WEEK_FILE="$HOSTNAME-week3.tgz"
+else
+    WEEK_FILE="$HOSTNAME-week4.tgz"
+fi
+
+if (( MONTH_NUM % 2 == 0 )); then
+    MONTH_FILE="$HOSTNAME-month2.tgz"
+else
+    MONTH_FILE="$HOSTNAME-month1.tgz"
+fi
+
+if (( DAY_NUM == 1 )); then
+    ARCHIVE_FILE="$MONTH_FILE"
+elif [[ "$DAY" == "Saturday" ]]; then
+    ARCHIVE_FILE="$WEEK_FILE"
+else
+    ARCHIVE_FILE="$HOSTNAME-$DAY.tgz"
+fi
+
+ARCHIVE="$BACKUP_DEST/$ARCHIVE_FILE"
+TMP_ARCHIVE="$ARCHIVE.tmp"
+
+log "Creating archive: $ARCHIVE_FILE"
+
+rm -f "$TMP_ARCHIVE"
+
+if ! tar \
+    --exclude=/tmp \
+    --exclude=/proc \
+    --exclude=/sys \
+    --exclude=/dev \
+    -czf "$TMP_ARCHIVE" \
+    "${BACKUP_FILES[@]}" 2>> "$LOG_FILE"; then
+    rm -f "$TMP_ARCHIVE"
+    alert_fail "tar command failed. See $LOG_FILE for details."
+fi
+
+mv "$TMP_ARCHIVE" "$ARCHIVE"
+
+SIZE=$(du -sh "$ARCHIVE" | cut -f1)
+log "Archive created: $ARCHIVE (Size: $SIZE)"
+
+ls -lh "$BACKUP_DEST" >> "$LOG_FILE"
+
+log "===== Backup Finished Successfully ====="
