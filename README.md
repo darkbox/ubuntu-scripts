@@ -24,4 +24,7 @@ curl -fsSL https://raw.githubusercontent.com/darkbox/ubuntu-scripts/main/basic-s
 wget -qO- https://raw.githubusercontent.com/darkbox/ubuntu-scripts/main/basic-server-docker-setup.sh | sudo bash
 ```
 
-
+## ASCII-art Banner
+```bash
+script=$(mktemp) && curl -s https://raw.githubusercontent.com/darkbox/ubuntu-scripts/main/setup_banner.sh > "$script" && sudo bash "$script"; rm -f "$script"
+```
